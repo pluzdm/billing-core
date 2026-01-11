@@ -1,12 +1,12 @@
 <?php
 
 namespace Modules\Billing\Application\Commands;
-final class IssueInvoiceCommand
+final readonly class IssueInvoiceCommand
 {
     public function __construct(
-        public readonly string $number,
-        public readonly int    $amountCents,
-        public readonly string $currency,
+        public string $number,
+        public int    $amountCents,
+        public string $currency,
     )
     {
     }

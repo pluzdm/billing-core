@@ -3,6 +3,8 @@
 namespace Modules\Billing\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\Billing\Domain\Events\InvoiceIssued;
+use Modules\Reporting\Application\Listeners\OnInvoiceIssued;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -11,7 +13,11 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array<string, array<int, string>>
      */
-    protected $listen = [];
+    protected $listen = [
+        InvoiceIssued::class => [
+            OnInvoiceIssued::class,
+        ],
+    ];
 
     /**
      * Indicates if events should be discovered.

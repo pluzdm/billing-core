@@ -4,6 +4,8 @@ namespace Modules\Billing\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Billing\Domain\Repositories\InvoiceRepository;
+use Modules\Billing\Infrastructure\Repositories\EloquentInvoiceRepository;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -36,6 +38,7 @@ class BillingServiceProvider extends ServiceProvider
     {
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+        $this->app->bind(InvoiceRepository::class, EloquentInvoiceRepository::class);
     }
 
     /**

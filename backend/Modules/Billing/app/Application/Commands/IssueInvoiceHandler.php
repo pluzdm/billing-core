@@ -2,27 +2,34 @@
 
 namespace Modules\Billing\Application\Commands;
 
-use Modules\Billing\Domain\Entities\Invoice as EntityInvoice;
+use Modules\Billing\Domain\Entities\Invoice;
+use Modules\Billing\Domain\Events\InvoiceIssued;
+use Modules\Billing\Domain\Repositories\InvoiceRepository;
 use Modules\Billing\Domain\ValueObjects\Money;
-use Modules\Billing\Infrastructure\Eloquent\Invoice as EloquentInvoice;
 
 
-final class IssueInvoiceHandler
+final readonly class IssueInvoiceHandler
 {
-    public function handle(IssueInvoiceCommand $command): EntityInvoice
+    public function __construct(private InvoiceRepository $repo) {}
+
+    public function handle(IssueInvoiceCommand $command): Invoice
     {
-        $invoice = new EntityInvoice(
+        if ($this->repo->existsByNumber($command->number)) {
+            throw new \DomainException('Invoice number already exists');
+        }
+
+        $invoice = new Invoice(
             $command->number,
             new Money($command->amountCents, $command->currency)
         );
+        $this->repo->save($invoice);
 
-        EloquentInvoice::query()->create([
-            'id' => $invoice->id(),
-            'number' => $invoice->number(),
-            'currency' => $invoice->amount()->currency(),
-            'amount_cents' => $invoice->amount()->amountCents(),
-            'status' => $invoice->status(),
-        ]);
+        event(new InvoiceIssued(
+            invoiceId: $invoice->id(),
+            number: $invoice->number(),
+            currency: $invoice->amount()->currency(),
+            amountCents: $invoice->amount()->amountCents(),
+        ));
 
         return $invoice;
     }
