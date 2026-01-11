@@ -160,7 +160,7 @@ return [
             | Infrastructure
             |--------------------------------------------------------------------------
             */
-            'model'      => ['path' => 'app/Infrastructure/Eloquent', 'generate' => false],
+            'model'      => ['path' => 'app/Infrastructure/Eloquent', 'generate' => true],
             'repository' => ['path' => 'app/Infrastructure/Repositories', 'generate' => false],
 
             /*
@@ -168,9 +168,9 @@ return [
             | Database
             |--------------------------------------------------------------------------
             */
-            'migration' => ['path' => 'Database/Migrations', 'generate' => true],
-            'seeder'    => ['path' => 'Database/Seeders', 'generate' => true],
-            'factory'   => ['path' => 'Database/Factories', 'generate' => false],
+            'migration' => ['path' => 'database/migrations', 'generate' => true],
+            'seeder'    => ['path' => 'database/seeders', 'generate' => true],
+            'factory'   => ['path' => 'database/factories', 'generate' => false],
 
             /*
             |--------------------------------------------------------------------------
@@ -186,8 +186,8 @@ return [
             | Tests
             |--------------------------------------------------------------------------
             */
-            'test-feature' => ['path' => 'Tests/Feature', 'generate' => true],
-            'test-unit'    => ['path' => 'Tests/Unit', 'generate' => true],
+            'test-feature' => ['path' => 'tests/Feature', 'generate' => true],
+            'test-unit'    => ['path' => 'tests/Unit', 'generate' => true],
         ],
     ],
 

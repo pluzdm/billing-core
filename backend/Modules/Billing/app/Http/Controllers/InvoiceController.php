@@ -3,7 +3,10 @@
 namespace Modules\Billing\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Billing\Application\Commands\IssueInvoiceCommand;
+use Modules\Billing\Application\Commands\IssueInvoiceHandler;
 
 class InvoiceController extends Controller
 {
@@ -26,7 +29,22 @@ class InvoiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
+    public function store(Request $request, IssueInvoiceHandler $handler): JsonResponse
+    {
+        $data = $request->validate([
+            'number' => ['required', 'string', 'max:255'],
+            'currency' => ['required', 'string', 'size:3'],
+            'amount_cents' => ['required', 'integer', 'min:0'],
+        ]);
+
+        $invoice = $handler->handle(new IssueInvoiceCommand(
+            number: $data['number'],
+            amountCents: $data['amount_cents'],
+            currency: $data['currency'],
+        ));
+
+        return response()->json(['id' => $invoice->id()], 201);
+    }
 
     /**
      * Show the specified resource.
